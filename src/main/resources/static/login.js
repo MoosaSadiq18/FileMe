@@ -28,7 +28,8 @@ function loginApi(userLoginObject){
     return fetch('http://localhost:8080/login',{
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(userLoginObject)
+        body: JSON.stringify(userLoginObject),
+        credentials: "include"
     })
         .then(response => {
             if (!response.ok) {
