@@ -52,10 +52,11 @@ public class RestController {
     public ResponseEntity<UserSignUpInfo> register(@RequestBody UserSignUpInfo user){
         if(userRepository.findByUsername(user.getUsername()) != null){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }else{
+        }
+        else{
             user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
             emailService.sendEmail(user.getEmail());
+            userRepository.save(user);
             return new ResponseEntity<>(user,HttpStatus.CREATED);
         }
     }
@@ -78,5 +79,6 @@ public class RestController {
         session.invalidate();
         return ResponseEntity.ok().build();
     }
+
 
 }
