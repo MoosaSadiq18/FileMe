@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Form</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,11 +61,6 @@
             background-color: #4cae4c;
         }
 
-        #message {
-            margin-top: 20px;
-            text-align: center;
-        }
-
         .error {
             color: red;
             font-size: 0.9em;
@@ -86,62 +82,104 @@
             border-radius: 4px;
         }
 
-        .weak {
-            width: 33%;
-            background-color: red;
+        .weak { width: 33%; background-color: red; }
+        .medium { width: 66%; background-color: orange; }
+        .strong { width: 100%; background-color: green; }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
         }
 
-        .medium {
-            width: 66%;
-            background-color: orange;
+        #otp-section {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .strong {
-            width: 100%;
-            background-color: green;
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .otp {
+            width: 45px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .otp:focus {
+            border-color: #007bff;
+            outline: none;
         }
     </style>
 </head>
 
 <body>
-<div class="container">
-    <h2 style="color: black">FileMe</h2>
+
+<div class="container" id="signup-section">
+    <h2>FileMe</h2>
+
     <form id="signupForm">
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" required>
         </div>
+
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" required>
         </div>
+
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" required>
+
             <div class="password-hint" id="passwordHint">
-                Password must be at least 8 characters long, and include at
-                least one uppercase letter, one lowercase letter, one
-                number, and one special character.
+                Password must be at least 8 characters long and include
+                uppercase, lowercase, number, and special character.
             </div>
+
             <span id="passwordError" class="error"></span>
             <div class="password-strength" id="passwordStrength"></div>
         </div>
+
         <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword"
-                   name="confirmPassword" required>
+            <input type="password" id="confirmPassword" required>
             <span id="confirmPasswordError" class="error"></span>
         </div>
-        <button type="submit" id="submit">Create Account</button>
 
-        <div>
-            <p>Already have an account? <a href="/login">Login</a></p>
-        </div>
+        <button type="submit">Create Account</button>
+
+        <p style="text-align:center;margin-top:10px;">
+            Already have an account? <a href="/login">Login</a>
+        </p>
     </form>
+
     <p id="message"></p>
+</div>
+
+<div id="otp-section">
+    <h3 style="text-align:center;">Enter OTP</h3>
+
+    <div class="otp-container">
+        <input type="text" maxlength="1" class="otp">
+        <input type="text" maxlength="1" class="otp">
+        <input type="text" maxlength="1" class="otp">
+        <input type="text" maxlength="1" class="otp">
+        <input type="text" maxlength="1" class="otp">
+        <input type="text" maxlength="1" class="otp">
+    </div>
 </div>
 
 <script src="signup.js"></script>
 </body>
-
 </html>

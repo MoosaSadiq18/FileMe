@@ -39,117 +39,23 @@ document.getElementById("signupForm").addEventListener("submit",function(e)
     else{
         //alert("hey");
         
-        document.body.innerHTML = `
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Form</title>
-    <style>
-
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.otp-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.otp {
-    width: 45px;
-    height: 50px;
-    font-size: 24px;
-    text-align: center;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-}
-
-.otp:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-    </style>
-</head>
-
-<body>
-
-<div class="otp-container">
-    <input type="text" maxlength="1" pattern="[0-9]" class="otp" />
-    <input type="text" maxlength="1" pattern="[0-9]" class="otp" />
-    <input type="text" maxlength="1" pattern="[0-9]" class="otp" />
-    <input type="text" maxlength="1" pattern="[0-9]"  class="otp" />
-    <input type="text" maxlength="1" pattern="[0-9]" class="otp" />
-    <input type="text" maxlength="1" pattern="[0-9]" class="otp" />
-</div>
-
-<script>
-    // Add OTP navigation functionality
-    const otpInputs = document.querySelectorAll('.otp');
-    
-    otpInputs.forEach((input, index) => {
-        input.addEventListener('input', (e) => {
-            // Only allow numbers
-            if (!/^\d*$/.test(e.target.value)) {
-                e.target.value = '';
-                return;
-            }
-            
-            if (e.target.value && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
-            }
-        });
-        
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                otpInputs[index - 1].focus();
-            }
-        });
-    });
-    
-    // Focus first input
-    otpInputs[0].focus();
-</script>
-</body>
-
-</html>
-`;
-
-const inputs=document.querySelectorAll('.otp');
-
-function getcompotp(){
-
-    let fullotp="";
-    inputs.forEach(inputs=>{
-        fullotp+=inputs.value;
-    });
-
-    return fullotp;
-
-}
 
     }
 
-    signUpApi(userSignUpObject)
-        .then(result => {
-            message.style.color = "green";
-            message.textContent = "SignUp successfull";
-            window.location.href = 'http://localhost:8080/login';
-        })
-        .then(error => {
-            message.style.color = "red";
-            message.textContent = error.message;
-        });
+    
+signUpApi(userSignUpObject)
+    .then(result => {
+        message.style.color = "green";
+        message.textContent = "Signup successful";
+        document.getElementById("signup-section").style.display = "none";
+        document.getElementById("otp-section").style.display = "block";
+        initOtp();
+    })
+    .catch(error => {
+        message.style.color = "red";
+        message.textContent = error.message;
+    });
+
 });
 
 document.getElementById("password").addEventListener("focus",function(){
@@ -183,13 +89,12 @@ function getPasswordStrength(password){
         return "Weak";
     }
     if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)) {
-        return "Strong";
+        return 'Strong';
     }
     else{
         return "Medium";
     }
 }
-
 function isEqual(password,confirmPassword){
     return password === confirmPassword;
 }
@@ -217,4 +122,38 @@ function signUpApi(userSignUpObject){
             throw err;
         });
 }
+
+function initOtp() {
+    const otpInputs = document.querySelectorAll(".otp");
+    otpInputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+            if (!/^\d$/.test(input.value)) {
+                input.value = "";
+                return;
+            }
+            if (index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+            const fullOtp = getCompleteOtp();
+            if (fullOtp.length === otpInputs.length) {
+                console.log(fullOtp);
+            }
+        });
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+    });
+    otpInputs[0].focus();
+}
+
+function getCompleteOtp() {
+    let otp = "";
+    document.querySelectorAll(".otp").forEach(input => {
+        otp += input.value;
+    });
+    return otp;
+}
+
 
