@@ -42,7 +42,6 @@ document.getElementById("signupForm").addEventListener("submit",function(e)
 
     }
 
-    
 signUpApi(userSignUpObject)
     .then(result => {
         message.style.color = "green";
@@ -123,7 +122,7 @@ function signUpApi(userSignUpObject){
         });
 }
 
-function initOtp() {
+function initOtp() {    //new 1
     const otpInputs = document.querySelectorAll(".otp");
     otpInputs.forEach((input, index) => {
         input.addEventListener("input", () => {
@@ -148,12 +147,14 @@ function initOtp() {
     otpInputs[0].focus();
 }
 
-function getCompleteOtp() {
+function getCompleteOtp() {  //new 2
     let otp = "";
     document.querySelectorAll(".otp").forEach(input => {
         otp += input.value;
     });
     return otp;
 }
+
+
 
 
