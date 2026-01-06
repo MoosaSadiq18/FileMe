@@ -73,12 +73,13 @@ function getPasswordStrength(password){
         return "Weak";
     }
     if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)) {
-        return 'Strong';
+        return "Strong";
     }
     else{
         return "Medium";
     }
 }
+
 function isEqual(password,confirmPassword){
     return password === confirmPassword;
 }
