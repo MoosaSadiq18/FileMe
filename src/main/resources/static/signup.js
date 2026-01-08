@@ -36,26 +36,7 @@ document.getElementById("signupForm").addEventListener("submit",function(e)
     if(username.value===""||password.value===""||confirmPassword.value===""||email.value==""){
         return;
     }
-    else{
-        //alert("hey");
-        
 
-    }
-
-signUpApi(userSignUpObject)
-    .then(result => {
-        message.style.color = "green";
-        message.textContent = "Signup successful";
-        document.getElementById("signup-section").style.display = "none";
-        document.getElementById("otp-section").style.display = "block";
-        initOtp();
-    })
-    .catch(error => {
-        message.style.color = "red";
-        message.textContent = error.message;
-    });
-
-});
 
 document.getElementById("password").addEventListener("focus",function(){
     document.getElementById("passwordHint").style.display = "block";
@@ -94,14 +75,72 @@ function getPasswordStrength(password){
         return "Medium";
     }
 }
+
 function isEqual(password,confirmPassword){
     return password === confirmPassword;
 }
 
+    function initOtp(email) {    //new 1
+        const otpInputs = document.querySelectorAll(".otp");
+        otpInputs.forEach((input, index) => {
+            input.addEventListener("input", () => {
+                if (!/^\d$/.test(input.value)) {
+                    input.value = "";
+                    return;
+                }
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                const fullOtp = getCompleteOtp();
+                if (fullOtp.length === otpInputs.length) {
+                    submitOtp(email,fullOtp);
+                    console.log(fullOtp);
+                }
+            });
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && !input.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        otpInputs[0].focus();
+    }
+
+    function getCompleteOtp() {  //new 2
+        let otp = "";
+        document.querySelectorAll(".otp").forEach(input => {
+            otp += input.value.trim();
+        });
+        return otp;
+    }
+
+    let otp;
+
+    function submitOtp(email,fullOtp){
+        const userOtpConfirmation = {
+            email: email,
+            otp: fullOtp
+        };
+        console.log("Sending otp to backend ", userOtpConfirmation);
+
+        otpConfirmationApi(userOtpConfirmation)
+            .then(confirmed => {
+                message.style.color = "green";
+                message.textContent = "SignUp successfull...";
+                window.location.href = "/login";
+            })
+            .catch(error => {
+                message.style.color = "red";
+                message.textContent = "SignUp failed...";
+                document.querySelectorAll(".otp").forEach(input => input.value = "");
+                document.querySelector(".otp").focus();
+            });
+    }
+
 function signUpApi(userSignUpObject){
     return fetch('http://localhost:8080/signup',{
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type' : 'application/json'},
         body: JSON.stringify(userSignUpObject),
         credentials: "include"
     })
@@ -122,39 +161,40 @@ function signUpApi(userSignUpObject){
         });
 }
 
-function initOtp() {    //new 1
-    const otpInputs = document.querySelectorAll(".otp");
-    otpInputs.forEach((input, index) => {
-        input.addEventListener("input", () => {
-            if (!/^\d$/.test(input.value)) {
-                input.value = "";
-                return;
+function otpConfirmationApi(userOtpConfirmation){
+    return fetch('http://localhost:8080/signup/otp',{
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(userOtpConfirmation)
+    })
+        .then(response => {
+            if(response.status === 409){
+                throw new Error("Otp not verified");
             }
-            if (index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
+            else if (response.status === 201) {
+                return true;
+            } else {
+                throw new Error("SignUp failed");
             }
-            const fullOtp = getCompleteOtp();
-            if (fullOtp.length === otpInputs.length) {
-                console.log(fullOtp);
-            }
+        })
+        .then(result => result)
+        .catch(err => {
+            console.log(err);
+            throw err;
         });
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Backspace" && !input.value && index > 0) {
-                otpInputs[index - 1].focus();
-            }
-        });
-    });
-    otpInputs[0].focus();
 }
 
-function getCompleteOtp() {  //new 2
-    let otp = "";
-    document.querySelectorAll(".otp").forEach(input => {
-        otp += input.value;
-    });
-    return otp;
-}
+    signUpApi(userSignUpObject)
+        .then(result => {
+            message.style.color = "blue";
+            message.textContent = "Please enter the OTP sent to your email";
+            document.getElementById("signup-section").style.display = "none";
+            document.getElementById("otp-section").style.display = "block";
+            initOtp(email.value);
+        })
+        .catch(error => {
+            message.style.color = "red";
+            message.textContent = error.message;
+        });
 
-
-
-
+});
