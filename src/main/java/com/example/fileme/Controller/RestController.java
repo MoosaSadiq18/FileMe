@@ -1,6 +1,6 @@
 package com.example.fileme.Controller;
 
-import com.example.fileme.Config.Dto.UserOtpData;
+import com.example.fileme.Dto.UserOtpData;
 import com.example.fileme.Entity.PendingUsers;
 import com.example.fileme.Entity.UserLoginInfo;
 import com.example.fileme.Entity.UserSignUpInfo;
@@ -13,10 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -52,12 +50,18 @@ public class RestController {
         return "login";
     }
 
+    @GetMapping("/upload")
+    public String getUploadPage(){return "fileUpload";}
+
 
     @PostMapping("/signup")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<PendingUsers> pendingRegister(@RequestBody PendingUsers pendingUser){
         if(userRepository.findByUsername(pendingUser.getUsername()) != null){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        else if(userRepository.findByEmail(pendingUser.getEmail()) != null){
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         else{
             pendingUser.setPassword(encoder.encode(pendingUser.getPassword()));
@@ -106,6 +110,5 @@ public class RestController {
         session.invalidate();
         return ResponseEntity.ok().build();
     }
-
 
 }

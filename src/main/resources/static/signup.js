@@ -148,6 +148,9 @@ function signUpApi(userSignUpObject){
             if(response.status === 409){
                 throw new Error("Username already exists");
             }
+            else if(response.status === 406){
+                throw new Error("Email already exists");
+            }
             else if (!response.ok) {
                 throw new Error("SignUp failed");
             } else {
