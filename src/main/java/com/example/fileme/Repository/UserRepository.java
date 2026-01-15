@@ -10,4 +10,3 @@ public interface UserRepository extends JpaRepository<UserSignUpInfo,Long> {
 
     UserSignUpInfo findByEmail(String email);
 }
-

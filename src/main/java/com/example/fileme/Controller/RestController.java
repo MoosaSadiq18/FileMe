@@ -1,7 +1,7 @@
 package com.example.fileme.Controller;
 
 import com.example.fileme.Dto.UserOtpData;
-import com.example.fileme.Entity.PendingUsers;
+import com.example.fileme.Dto.PendingUsers;
 import com.example.fileme.Entity.UserLoginInfo;
 import com.example.fileme.Entity.UserSignUpInfo;
 import com.example.fileme.Repository.PendingUserRepo;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -109,6 +108,14 @@ public class RestController {
     public ResponseEntity<Void> logout(HttpSession session){
         session.invalidate();
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/addFriend")
+    public ResponseEntity<String> searchToAdd(@RequestBody String username){
+        if(userRepository.findByUsername(username) == null){
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(username);
     }
 
 }

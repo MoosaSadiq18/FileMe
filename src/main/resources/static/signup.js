@@ -1,6 +1,3 @@
-console.log("JS file loaded");
-
-
 document.getElementById("signupForm").addEventListener("submit",function(e)
 {
     e.preventDefault();

@@ -15,7 +15,7 @@ document.getElementById("loginForm").addEventListener("submit",function(e)
         .then(result => {
                 message.style.color = "green";
                 message.textContent = "Login successfull";
-                window.location.href = 'http://localhost:8080/';
+                window.location.href = '/upload';
         })
         .catch(error => {
             message.style.color = "red";

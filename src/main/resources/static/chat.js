@@ -14,6 +14,8 @@ function connect(){
     console.log(currentUser);
 }
 
+
+
 function displayMessage(data){
     let messages = document.getElementById("messages");
     let messageData = JSON.parse(data);
