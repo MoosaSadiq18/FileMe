@@ -131,4 +131,12 @@ public class RestController {
         return ResponseEntity.ok().body(username);
     }
 
+    @PostMapping("/searchFriend")
+    public ResponseEntity<String> searchForFriend(@RequestBody String username){
+        if(userRepository.findByUsername(username) == null){
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(username);
+    }
+
 }
