@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add friends</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group {
+            border: 1px solid #ddd;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: dodgerblue;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: crosshair;
+        }
+
+        .search-btn:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+
+<form id="add_form">
+    <div class="form-group">
+        <h1>Search to add a friend</h1>
+        <input type="text" id="add_friend" name="add" placeholder="Enter username" required>
+        <button type="submit" class="search-btn">Search</button>
+    </div>
+</form>
+
+<script src="chatHome.js"></script>
+</body>
+</html>
