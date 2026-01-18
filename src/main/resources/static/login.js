@@ -13,9 +13,15 @@ document.getElementById("loginForm").addEventListener("submit",function(e)
 
     loginApi(userLoginObject)
         .then(result => {
+            if(result === 409){
+                message.style.color = "red";
+                message.textContent = "Someone is already logged in";
+            }
+            else {
                 message.style.color = "green";
                 message.textContent = "Login successfull";
                 window.location.href = '/upload';
+            }
         })
         .catch(error => {
             message.style.color = "red";
@@ -32,8 +38,11 @@ function loginApi(userLoginObject){
         credentials: "include"
     })
         .then(response => {
+            if (response.status === 409) {
+                return 409;
+            }
             if (!response.ok) {
-                throw new Error("Login failed");
+                throw new Error("Failed");
             }
             else{
                 return response.json();

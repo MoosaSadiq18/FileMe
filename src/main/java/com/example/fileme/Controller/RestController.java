@@ -7,6 +7,7 @@ import com.example.fileme.Entity.UserSignUpInfo;
 import com.example.fileme.Repository.PendingUserRepo;
 import com.example.fileme.Repository.UserRepository;
 import com.example.fileme.Service.EmailService;
+import io.micrometer.observation.ObservationTextPublisher;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,16 +78,19 @@ public class RestController {
         }
         else{
             migrateUser(userOtpData.getEmail());
+            pendingUserRepo.deleteByEmail(userOtpData.getEmail());
+            userRepository.findByEmail(userOtpData.getEmail()).setOnlineStatus("Offline");
+            userRepository.save(userRepository.findByEmail(userOtpData.getEmail()));
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
     }
-
 
     public void migrateUser(String email){
         UserSignUpInfo user = new UserSignUpInfo();
         user.setEmail(email);
         user.setUsername((pendingUserRepo.findByEmail(email)).getUsername());
         user.setPassword((pendingUserRepo.findByEmail(email)).getPassword());
+        user.setOnlineStatus((pendingUserRepo.findByEmail(email)).getOnlineStatus());
         userRepository.save(user);
     }
 
@@ -95,13 +99,22 @@ public class RestController {
     public ResponseEntity<UserLoginInfo> login(@RequestBody UserLoginInfo user, HttpSession session){
         UserSignUpInfo existingUser = userRepository.findByEmail(user.getLoginEmail());
 
-        if(existingUser!=null && encoder.matches(user.getLoginPassword(),existingUser.getPassword())){
+        if(existingUser.getOnlineStatus().matches("Online")){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+        else if(existingUser!=null && encoder.matches(user.getLoginPassword(),existingUser.getPassword())){
             session.setAttribute("user",existingUser);
+            changeStatus(user.getLoginEmail());
             return ResponseEntity.ok(user);
         }
         else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+    }
+
+    public void changeStatus(String email){
+        userRepository.findByEmail(email).setOnlineStatus("Online");
+        userRepository.save(userRepository.findByEmail(email));
     }
 
     @PostMapping("/logout")
