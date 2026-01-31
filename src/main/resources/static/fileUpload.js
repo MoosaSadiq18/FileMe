@@ -2,6 +2,7 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
     const fileInput = document.getElementById('fileUpload');
+    let message = document.getElementById("message");
     const file = fileInput.files[0];
     const fileName = file.name;
     console.log("File is ",fileName);
@@ -9,9 +10,13 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
     uploadFile(file)
         .then(response => {
             if(!response){
+                message.style.color = "red";
+                message.textContent = "Failed to upload your file";
                 console.log("Failed to upload ")
             }
             else{
+                message.style.color = "green";
+                message.textContent = "File uploaded successfully";
                 console.log("Uploaded successfully")
             }
         })
