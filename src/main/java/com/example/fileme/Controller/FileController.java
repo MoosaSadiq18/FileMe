@@ -1,5 +1,7 @@
 package com.example.fileme.Controller;
 
+import com.example.fileme.Service.S3Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,38 +22,25 @@ public class FileController {
 
     private final Path storagePath = Paths.get("files_storage");
 
+    @Autowired
+    S3Service s3Service;
+
     public FileController() throws IOException{
         if(Files.notExists(storagePath)){
             Files.createDirectory(storagePath);
         }
     }
 
+    //s3 storage
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile){
-        if(multipartFile.isEmpty()){
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException{
+        if(file.isEmpty()){
             return ResponseEntity.badRequest().body("File is empty");
         }
-
-        String fileName = multipartFile.getOriginalFilename();
-        if(fileName == null || !(fileName.toLowerCase(Locale.ROOT).matches(".*\\.(jpg|jpeg|png|gif|pdf)$"))){
-            return ResponseEntity.badRequest().body("Enter image files only");
+        else{
+            s3Service.uploadFileToS3(file);
+            return ResponseEntity.ok().body("File uploaded successfully");
         }
-
-        String storedName = Paths.get(fileName).getFileName().toString();
-
-        Path targetFile = storagePath.resolve(storedName).normalize();
-        if(!targetFile.startsWith(storagePath)){
-            return ResponseEntity.badRequest().body("Invalid file path");
-        }
-
-        try(InputStream stream = multipartFile.getInputStream()){
-            Files.copy(stream, targetFile, StandardCopyOption.REPLACE_EXISTING);
-            return ResponseEntity.ok().body("Image uploaded...");
-        }
-        catch (IOException e){
-            return ResponseEntity.internalServerError().body("Image failed to upload");
-        }
-
     }
 
 }
