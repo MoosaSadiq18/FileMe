@@ -1,5 +1,6 @@
 package com.example.fileme.Controller;
 
+import com.example.fileme.Dto.Migrator;
 import com.example.fileme.Dto.UserOtpData;
 import com.example.fileme.Dto.PendingUsers;
 import com.example.fileme.Entity.UserLoginInfo;
@@ -37,7 +38,7 @@ public class RestController {
         if(session.getAttribute("user") == null){
             return "redirect:/login";
         }
-        return "chat";
+        return "fileUpload";
     }
 
     @GetMapping("/signup")
@@ -71,25 +72,20 @@ public class RestController {
         }
     }
 
+    @Autowired
+    Migrator migrator;
+
     @PostMapping("/signup/otp")
     public ResponseEntity<?> confirmRegister(@RequestBody UserOtpData userOtpData){
         if(!(emailService.confirmPin(userOtpData.getEmail(), userOtpData.getOtp()))){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         else{
-            migrateUser(userOtpData.getEmail());
+            migrator.migrateUser(userOtpData.getEmail());
             pendingUserRepo.deleteByEmail(userOtpData.getEmail());
             userRepository.save(userRepository.findByEmail(userOtpData.getEmail()));
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
-    }
-
-    public void migrateUser(String email){
-        UserSignUpInfo user = new UserSignUpInfo();
-        user.setEmail(email);
-        user.setUsername((pendingUserRepo.findByEmail(email)).getUsername());
-        user.setPassword((pendingUserRepo.findByEmail(email)).getPassword());
-        userRepository.save(user);
     }
 
 
@@ -104,28 +100,6 @@ public class RestController {
         else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpSession session){
-        session.invalidate();
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/addFriend")
-    public ResponseEntity<String> searchToAdd(@RequestBody String username){
-        if(userRepository.findByUsername(username) == null){
-            return ResponseEntity.badRequest().body("User not found");
-        }
-        return ResponseEntity.ok().body(username);
-    }
-
-    @PostMapping("/searchFriend")
-    public ResponseEntity<String> searchForFriend(@RequestBody String username){
-        if(userRepository.findByUsername(username) == null){
-            return ResponseEntity.badRequest().body("User not found");
-        }
-        return ResponseEntity.ok().body(username);
     }
 
 }

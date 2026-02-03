@@ -35,7 +35,6 @@ function loginApi(userLoginObject){
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(userLoginObject),
-        credentials: "include"
     })
         .then(response => {
             if (response.status === 409) {
