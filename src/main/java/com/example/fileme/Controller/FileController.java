@@ -1,7 +1,9 @@
 package com.example.fileme.Controller;
 
+import com.example.fileme.Entity.FileMetaData;
+import com.example.fileme.Service.FileOtpService;
+import com.example.fileme.Service.LoggerService;
 import com.example.fileme.Service.S3Service;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -10,15 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 
 @RestController
@@ -36,12 +36,25 @@ public class FileController {
         }
     }
 
+    @Autowired
+    LoggerService loggerService;
+
+    @Autowired
+    FileMetaData fileMetaData;
+
+    @Autowired
+    FileOtpService fileOtpService;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException{
         if(file.isEmpty()){
             return ResponseEntity.badRequest().body("File is empty");
         }
         else{
+            LocalDateTime currentTime = LocalDateTime.now();
+            fileMetaData.setLoggerData(currentTime.toString(),file.getOriginalFilename(),file.getSize());
+            loggerService.saveToRepository(fileMetaData);
+            fileOtpService.mapFileOtp(file.getOriginalFilename());
             s3Service.uploadFileToS3(file);
             return ResponseEntity.ok().body("File uploaded successfully");
         }

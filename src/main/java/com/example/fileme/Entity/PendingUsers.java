@@ -1,4 +1,4 @@
-package com.example.fileme.Dto;
+package com.example.fileme.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

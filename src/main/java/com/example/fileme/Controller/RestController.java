@@ -2,13 +2,12 @@ package com.example.fileme.Controller;
 
 import com.example.fileme.Dto.Migrator;
 import com.example.fileme.Dto.UserOtpData;
-import com.example.fileme.Dto.PendingUsers;
-import com.example.fileme.Entity.UserLoginInfo;
+import com.example.fileme.Entity.PendingUsers;
+import com.example.fileme.Dto.UserLoginInfo;
 import com.example.fileme.Entity.UserSignUpInfo;
 import com.example.fileme.Repository.PendingUserRepo;
 import com.example.fileme.Repository.UserRepository;
 import com.example.fileme.Service.EmailService;
-import io.micrometer.observation.ObservationTextPublisher;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

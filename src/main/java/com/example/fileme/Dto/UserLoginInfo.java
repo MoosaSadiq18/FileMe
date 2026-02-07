@@ -1,11 +1,8 @@
-package com.example.fileme.Entity;
+package com.example.fileme.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
