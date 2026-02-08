@@ -60,9 +60,10 @@ public class FileController {
         }
     }
 
-    @GetMapping("/download/{filename}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename){
-        byte[] data = s3Service.downloadFileFromS3(filename);
+    @GetMapping("/download/{otp}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String otp){
+        byte[] data = s3Service.downloadFileFromS3(otp);
+        String filename = fileOtpService.getFileNameFromOtp(otp);
         String contentType = URLConnection.guessContentTypeFromName(filename);
 
         if(contentType==null){
