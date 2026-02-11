@@ -34,6 +34,9 @@ public class S3Service {
 
     public byte[] downloadFileFromS3(String otp){
         String filename = fileOtpService.getFileNameFromOtp(otp).trim();
+        if(filename==null){
+            throw new NullPointerException("Filename is null");
+        }
 
         ResponseBytes<GetObjectResponse> objectAsBytes =
                         s3Client.getObjectAsBytes(GetObjectRequest.builder()
