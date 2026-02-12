@@ -11,4 +11,7 @@ public interface FileOtpRepository extends JpaRepository<FileOtpMap,Long> {
 
     @Query("select i.fileName from FileOtpMap i where i.otp =:otp")
     String getFileName(@Param("otp") String otp);
+
+    @Query("select i.otp from FileOtpMap i where i.fileName =:fileName")
+    String getOtp(@Param("fileName") String fileName);
 }

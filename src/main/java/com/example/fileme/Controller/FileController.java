@@ -1,6 +1,8 @@
 package com.example.fileme.Controller;
 
 import com.example.fileme.Entity.FileMetaData;
+import com.example.fileme.Entity.FileOtpMap;
+import com.example.fileme.Service.EmailService;
 import com.example.fileme.Service.FileOtpService;
 import com.example.fileme.Service.LoggerService;
 import com.example.fileme.Service.S3Service;
@@ -29,6 +31,8 @@ public class FileController {
 
     @Autowired
     S3Service s3Service;
+    @Autowired
+    private EmailService emailService;
 
     public FileController() throws IOException{
         if(Files.notExists(storagePath)){
@@ -46,8 +50,8 @@ public class FileController {
     FileOtpService fileOtpService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException{
-        if(file.isEmpty()){
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,@RequestParam String emailId) throws IOException{
+        if(file.isEmpty()) {
             return ResponseEntity.badRequest().body("File is empty");
         }
         else{
@@ -56,10 +60,12 @@ public class FileController {
             loggerService.saveToRepository(fileMetaData);
             fileOtpService.mapFileOtp(file.getOriginalFilename());
             s3Service.uploadFileToS3(file);
+            emailService.sendFileOtpEmail(emailId,fileOtpService.getOtpFromFileName(file.getOriginalFilename()));
             return ResponseEntity.ok().body("File uploaded successfully");
         }
     }
 
+    
     @GetMapping("/download/{otp}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String otp){
         byte[] data = s3Service.downloadFileFromS3(otp);

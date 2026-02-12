@@ -31,4 +31,8 @@ public class FileOtpService {
         return fileOtpRepository.getFileName(otp);
     }
 
+    public String getOtpFromFileName(String fileName){
+        return fileOtpRepository.getOtp(fileName);
+    }
+
 }

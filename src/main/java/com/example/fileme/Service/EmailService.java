@@ -44,4 +44,15 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    public void sendFileOtpEmail(String emailId,String otp){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailId);
+        if(emailId==null){
+            throw new NullPointerException("Email is empty");
+        }
+        message.setSubject("File Download Otp");
+        message.setText("Your file download otp is " + otp);
+        javaMailSender.send(message);
+    }
+
 }
