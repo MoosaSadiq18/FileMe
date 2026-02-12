@@ -1,4 +1,4 @@
-Hobby project to get good at backend and explore new stuff.
+Hobby project to get good at backend and explore AWS.
 
 Thanks to @muhammadaaribali for designing UI.
 
