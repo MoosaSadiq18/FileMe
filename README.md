@@ -1,6 +1,6 @@
 Hobby project to get good at backend and explore AWS.
 
-I did not focus on UI and most of the codebase consists the backend code.
+I did not focus on UI and most of the codebase consists of backend code.
 
 Thanks to @muhammadaaribali https://github.com/muhammadaaribali for designing UI.
 
