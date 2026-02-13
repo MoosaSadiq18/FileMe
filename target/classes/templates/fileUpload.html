@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Uploader</title>
+
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload_container {
+            border: 1px solid #ddd;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .upload_button {
+            width: 20%;
+            padding: 10px;
+            background-color: dodgerblue;
+            border: none;
+            color: white;
+            width: 100px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .upload_button:hover {
+            background-color: #4cae4c;
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .download_container {
+            border: 1px solid #ddd;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .download_button {
+            width: 20%;
+            padding: 10px;
+            background-color: dodgerblue;
+            border: none;
+            color: white;
+            width: 100px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .download_button:hover {
+            background-color: #4cae4c;
+        }
+
+        #message1 {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="upload_container">
+<h1>Upload Your File</h1>
+<form id="uploadForm" method="post" enctype="multipart/form-data">
+    <input type="file" id="fileUpload" name="fileUpload">
+    <br>
+    <br>
+    <input class="upload_button" type="submit" value="Upload">
+</form>
+    <div><p id="message"></p></div>
+</div>
+
+<div class="download_container">
+    <h1>Upload Your File</h1>
+    <form id="downloadform" method="post" enctype="multipart/form-data">
+        <input type="text" id="filedownload" name="filedownload">
+        <br>
+        <br>
+        <input class="download_button" type="submit" value="Download">
+    </form>
+    <div><p id="message1"></p></div>
+</div>
+
+<script src="fileUpload.js"></script>
+</body>
+</html>
